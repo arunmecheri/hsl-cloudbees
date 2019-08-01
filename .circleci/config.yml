@@ -65,7 +65,21 @@ jobs:
      #  Test Security Results
       - run: 
           name: Assert build quality against security standards
-          command: '[[ $(curl -s "https://www.shiftleft.io/api/v2/organizations/$SHIFTLEFT_ORG_ID/projects/$APP_NAME/metrics" -H "authorization: Bearer $TOKEN" -H "content-type: application/json" --data-binary "{\"context\":{\"projectSpId\":\"sl/$SHIFTLEFT_ORG_ID/$APP_NAME\"},\"queries\":[{\"violationsAll\":{\"projectSpId\":\"sl/$SHIFTLEFT_ORG_ID/$APP_NAME\"}}]}" | jq ".responses[0].violationsAll.violations | map(select(.count > 0)) | map(.name)" | grep -o "sensitive-to-http" | wc -l) -le 20 ]]'
+          command: |
+            BUILD_RESULT = curl --fail --show-error -X GET https://www.shiftleft.io/api/v3/public/org/$SHIFTLEFT_ORG_ID/app/$APP_NAME/tag/branch/$CIRCLE_BRANCH/build -H 'Accept: */*' -H 'Authorization: Bearer $SHIFTLEFT_API_TOKEN' -H 'Cache-Control: no-cache' -H 'Connection: keep-alive' -H "Host: www.shiftleft.io" -H 'accept-encoding: text/plain, deflate' -H 'cache-control: no-cache' -H 'cookie: Cookie_3=value' -s -b Cookie_3=value
+            echo $BUILD_RESULT
+            SUCCESS=$(echo $BUILD_RESULT | grep "success")
+            if [ -z "$SUCCESS" ]; then
+                exit 1;
+            fi
+            exit 0
+              
+     #  Comment on Pull Request if build fails due to security issues
+     #- run:
+     #     name: Add GitHub PR comments
+     #     command: curl --data fail_tests.log http://example.com/error_logs
+     #     when: on_fail     
+          
 
 #  deploy:
  #   docker:
