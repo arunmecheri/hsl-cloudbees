@@ -53,20 +53,20 @@ jobs:
             source $BASH_ENV
       
       # Analyze for security
-      - run: 
-          name: Analyze for security bugs
-          command: sl analyze --wait --tag branch=$CIRCLE_BRANCH --app $APP_NAME target/hello-shiftleft-0.0.1.jar
+      #- run: 
+      #    name: Analyze for security bugs
+      #    command: sl analyze --wait --tag branch=$CIRCLE_BRANCH --app $APP_NAME target/hello-shiftleft-0.0.1.jar
           
      #  Prioritize security bugs
-      - run: 
-          name: Prioritize security bugs
-          command: sh uat.sh
+     # - run: 
+     #     name: Prioritize security bugs
+     #     command: sh uat.sh
       
      #  Test Security Results
       - run: 
           name: Assert build quality against security standards
           command: |
-            BUILD_RESULT = curl --fail --show-error -X GET https://www.shiftleft.io/api/v3/public/org/$SHIFTLEFT_ORG_ID/app/$APP_NAME/tag/branch/$CIRCLE_BRANCH/build -H 'Accept: */*' -H 'Authorization: Bearer $SHIFTLEFT_API_TOKEN' -H 'Cache-Control: no-cache' -H 'Connection: keep-alive' -H "Host: www.shiftleft.io" -H 'accept-encoding: text/plain, deflate' -H 'cache-control: no-cache' -H 'cookie: Cookie_3=value' -s -b Cookie_3=value
+            BUILD_RESULT=$(curl --fail --show-error -X GET https://www.shiftleft.io/api/v3/public/org/$SHIFTLEFT_ORG_ID/app/$APP_NAME/tag/branch/$CIRCLE_BRANCH/build -H 'Accept: */*' -H 'Authorization: Bearer $SHIFTLEFT_API_TOKEN' -H 'Cache-Control: no-cache' -H 'Connection: keep-alive' -H "Host: www.shiftleft.io" -H 'accept-encoding: text/plain, deflate' -H 'cache-control: no-cache' -H 'cookie: Cookie_3=value' -s -b Cookie_3=value)
             echo $BUILD_RESULT
             SUCCESS=$(echo $BUILD_RESULT | grep "success")
             if [ -z "$SUCCESS" ]; then
