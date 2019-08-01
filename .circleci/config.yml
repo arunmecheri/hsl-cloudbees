@@ -53,14 +53,14 @@ jobs:
             source $BASH_ENV
       
       # Analyze for security
-      #- run: 
-      #    name: Analyze for security bugs
-      #    command: sl analyze --wait --tag branch=$CIRCLE_BRANCH --app $APP_NAME target/hello-shiftleft-0.0.1.jar
+      - run: 
+          name: Analyze for security bugs
+          command: sl analyze --wait --tag branch=$CIRCLE_BRANCH --app $APP_NAME target/hello-shiftleft-0.0.1.jar
           
      #  Prioritize security bugs
-     # - run: 
-     #     name: Prioritize security bugs
-     #     command: sh uat.sh
+      - run: 
+          name: Prioritize security bugs
+          command: sh uat.sh
       
      #  Test Security Results
       - run: 
