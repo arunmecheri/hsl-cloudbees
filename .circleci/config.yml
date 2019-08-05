@@ -43,7 +43,7 @@ jobs:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
           
-      # build the apps!!
+     # build the apps!!
       - run: 
           name: Build the application
           command: mvn clean package
@@ -54,7 +54,7 @@ jobs:
             echo 'export APP_NAME=Docker_Demo_App' >> $BASH_ENV
             source $BASH_ENV
       
-      # Analyze for security
+     # Analyze for security
       - run: 
           name: Analyze for security bugs
           command: sl analyze --wait --tag branch=$CIRCLE_BRANCH --app $APP_NAME target/hello-shiftleft-0.0.1.jar
@@ -63,9 +63,8 @@ jobs:
       - run: 
           name: Prioritize security bugs
           command: sh uat.sh
-      
      #  Test Security Results
-     - run: 
+      - run: 
           name: Assert build quality against security standards
           command: |
             BUILD_RESULT=$(curl --fail --show-error -X GET "https://www.shiftleft.io/api/v3/public/org/$SHIFTLEFT_ORG_ID/app/$APP_NAME/tag/branch/$CIRCLE_BRANCH/build" -H 'Accept: */*' -H "Authorization: Bearer $SHIFTLEFT_API_TOKEN" -H 'Cache-Control: no-cache' -H 'Connection: keep-alive' -H 'Host: www.shiftleft.io' -H 'accept-encoding: text/plain, deflate' -H 'cache-control: no-cache' -H 'cookie: Cookie_3=value' -s -b Cookie_3=value)
@@ -77,7 +76,7 @@ jobs:
             fi
             exit 0
       
-      #  Comment on Pull Request if build fails due to security issues
+     #  Comment on Pull Request if build fails due to security issues
       - pr-comment:
           name: Add GitHub PR comments
           comment: "Build result - $BUILD_RESULT"
