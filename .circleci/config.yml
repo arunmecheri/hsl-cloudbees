@@ -65,7 +65,7 @@ jobs:
           command: sh uat.sh
       
      #  Test Security Results
-      - run: 
+     - run: 
           name: Assert build quality against security standards
           command: |
             BUILD_RESULT=$(curl --fail --show-error -X GET "https://www.shiftleft.io/api/v3/public/org/$SHIFTLEFT_ORG_ID/app/$APP_NAME/tag/branch/$CIRCLE_BRANCH/build" -H 'Accept: */*' -H "Authorization: Bearer $SHIFTLEFT_API_TOKEN" -H 'Cache-Control: no-cache' -H 'Connection: keep-alive' -H 'Host: www.shiftleft.io' -H 'accept-encoding: text/plain, deflate' -H 'cache-control: no-cache' -H 'cookie: Cookie_3=value' -s -b Cookie_3=value)
@@ -76,35 +76,9 @@ jobs:
                 exit 1;
             fi
             exit 0
-              
-     #  Comment on Pull Request if build fails due to security issues
-     - pr-comment:
+      
+      #  Comment on Pull Request if build fails due to security issues
+      - pr-comment:
           name: Add GitHub PR comments
           comment: "Build result - $BUILD_RESULT"
-          when: on_fail     
-          
-
-#  deploy:
- #   docker:
-  #    - image: google/cloud-sdk
-   # steps:
-    
-      # Set up Google cloud authentication access
-   #   - run: 
-    #    name: Set up Google Cloud Auth
-     #   command: |
-      #    echo $GCLOUD_SERVICE_KEY | base64 --decode | sudo gcloud auth activate-service-account --key-file=-
-       #   sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-        #  sudo gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
-      
-      # Download the relevant files
-    #  - run: 
-     #   name: Download HelloShiftLeft Code
-      #  command: git clone https://github.com/alokshukla1978/HelloShiftLeft.git
-      
-      # Set up Google cloud authentication access
-     # - run: 
-      #  name: Run Python Command
-       # command: |
-        #  cd HelloShiftLeft
-         # python create-deploy-instance.py --zone us-east1-b --name test-1 affable-cacao-206319 sl-test-bucket
+          when: on_fail
