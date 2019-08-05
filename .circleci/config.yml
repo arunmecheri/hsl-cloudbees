@@ -2,7 +2,9 @@
 #
 # Check https://circleci.com/docs/2.0/language-java/ for more details
 #
-version: 2
+version: 2.1
+orbs:
+  pr-comment: benjlevesque/pr-comment@0.1.4
 jobs:
   build:
     docker:
@@ -70,15 +72,16 @@ jobs:
             echo $BUILD_RESULT
             SUCCESS=$(echo $BUILD_RESULT | grep "success")
             if [ -z "$SUCCESS" ]; then
+                pr-comment 
                 exit 1;
             fi
             exit 0
               
      #  Comment on Pull Request if build fails due to security issues
-     #- run:
-     #     name: Add GitHub PR comments
-     #     command: curl --data fail_tests.log http://example.com/error_logs
-     #     when: on_fail     
+     - pr-comment:
+          name: Add GitHub PR comments
+          comment: "Build result - $BUILD_RESULT"
+          when: on_fail     
           
 
 #  deploy:
