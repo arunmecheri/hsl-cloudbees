@@ -78,5 +78,6 @@ jobs:
       
      #  Comment on Pull Request if build fails due to security issues
       - pr-comment/pr-comment:
+          name: Add comments to GitHub Pull Request
           comment: "Build result - $BUILD_RESULT"
           #when: on_fail
