@@ -77,6 +77,6 @@ jobs:
             exit 0
       
      #  Comment on Pull Request if build fails due to security issues
-      - pr-comment:
-          comment: Build result - $BUILD_RESULT
-          #when: on_fail
+      - pr-comment/pr-comment:
+          comment: "Build result - $BUILD_RESULT"
+          when: on_fail
