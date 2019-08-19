@@ -79,9 +79,11 @@ jobs:
      #  Comment on Pull Request if build fails due to security issues
       - run:
           name: Add comments to GitHub Pull Request
-          command: echo $BUILD_RESULT
+          command: |
+            echo $BUILD_RESULT
+            ./demo.js
           when: on_fail
           
      #  Comment on Pull Request if build fails due to security issues
-      - pr-comment/pr-comment:
-          comment: "Build result - $BUILD_RESULT"
+     # - pr-comment/pr-comment:
+     #     comment: "Build result - $BUILD_RESULT"
