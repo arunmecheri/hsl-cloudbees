@@ -3,5 +3,5 @@
 const bot = require("circle-github-bot").create();
  
 bot.comment(`
-<h3>${bot.env.commitMessage}</h3>
+<h3>"Commit message - "${bot.env.commitMessage}</h3>
 `);
