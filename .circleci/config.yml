@@ -25,7 +25,6 @@ jobs:
                 name: Build the application
                 command: mvn clean package
                 
-jobs:
     ShiftLeft_tests:
         docker:
             - image: circleci/openjdk:8-jdk-node
