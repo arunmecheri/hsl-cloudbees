@@ -64,11 +64,10 @@ jobs:
                     exit 0
                     
 workflows:
-    version: 2
-    build_and_test:
-        jobs:
-            - build
-            - ShiftLeft_tests
-                requires:
-                    - build
-		
+  version: 2
+	  build_and_test:
+		  jobs:
+			  - build
+				- ShiftLeft_tests
+				  requires:
+					  - build
