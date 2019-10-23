@@ -68,6 +68,6 @@ workflows:
     build_and_test:
         jobs:
             - build
-            - ShiftLeft_tests
+            - ShiftLeft_tests:
                 requires:
                     - build
