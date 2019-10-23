@@ -46,12 +46,12 @@ jobs:
                 name: Analyze for security bugs
                 command: sl analyze --wait --tag branch=$CIRCLE_BRANCH --app $APP_NAME target/hello-shiftleft-0.0.1.jar
                 
-            #	Prioritize security bugs
+            #   Prioritize security bugs
             - run:
                 name: Prioritize security bugs
                 command: sh uat.sh
                 
-            #	Test Security Results
+            #   Test Security Results
             - run:
                 name: Assert build quality against security standards
                 command: |
@@ -64,10 +64,10 @@ jobs:
                     exit 0
                     
 workflows:
-	version: 2
-	build_and_test:
-		jobs:
-			- build
-			- ShiftLeft_tests
-				requires:
-					- build
+    version: 2
+    build_and_test:
+        jobs:
+            - build
+            - ShiftLeft_tests
+                requires:
+                    - build
