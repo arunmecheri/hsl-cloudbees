@@ -2,10 +2,10 @@ jobs:
     build:
         docker:
             - image: circleci/openjdk:8-jdk-node
-	working_directory: ~/repo
-	environment:
-	    MAVEN_OPTS: -Xmx3200m
-	    
+        working_directory: ~/repo
+        environment:
+            MAVEN_OPTS: -Xmx3200m
+            
         steps:
             - checkout
             - restore_cache:
@@ -29,8 +29,8 @@ jobs:
     ShiftLeft_tests:
         docker:
             - image: circleci/openjdk:8-jdk-node
-	working_directory: ~/repo
-	
+        working_directory: ~/repo
+        
         steps:
             - run:
                 name: Update PATH and Define Environment Variable at Runtime
@@ -71,3 +71,4 @@ workflows:
 			- ShiftLeft_tests
 				requires:
 					- build
+		
