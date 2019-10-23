@@ -1,80 +1,71 @@
-# Java Maven CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-java/ for more details
-#
-version: 2.1
-
 jobs:
-  build:
-    docker:
-      - image: circleci/openjdk:8-jdk-node
-    working_directory: ~/repo
-    environment:
-      MAVEN_OPTS: -Xmx3200m
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "pom.xml" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-
-      - run: mvn dependency:go-offline
-
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: v1-dependencies-{{ checksum "pom.xml" }}
-          
-     # build the apps!!
-      - run: 
-          name: Build the application
-          command: mvn clean package
-
-jobs:
-  ShiftLeft_tests:
-    docker:
-      - image: circleci/openjdk:8-jdk-node
-    working_directory: ~/repo
-    steps:    
-      - run:
-          name: Update PATH and Define Environment Variable at Runtime
-          command: |
-            echo 'export APP_NAME=Docker_Demo_App' >> $BASH_ENV
-            source $BASH_ENV
- 
-      - run: 
-          name: Install Shiftleft agent
-          command: curl https://www.shiftleft.io/download/sl-latest-linux-x64.tar.gz > /tmp/sl.tar.gz && sudo tar -C /usr/local/bin -xzf /tmp/sl.tar.gz
-
-      - run: 
-          name: Analyze for security bugs
-          command: sl analyze --wait --tag branch=$CIRCLE_BRANCH --app $APP_NAME target/hello-shiftleft-0.0.1.jar
-          
-     #  Prioritize security bugs
-      - run: 
-          name: Prioritize security bugs
-          command: sh uat.sh
-
-     #  Test Security Results
-      - run: 
-          name: Assert build quality against security standards
-          command: |
-            BUILD_RESULT=$(curl --fail --show-error -X GET "https://www.shiftleft.io/api/v3/public/org/$SHIFTLEFT_ORG_ID/app/$APP_NAME/tag/branch/$CIRCLE_BRANCH/build" -H 'Accept: */*' -H "Authorization: Bearer $SHIFTLEFT_API_TOKEN" -H 'Cache-Control: no-cache' -H 'Connection: keep-alive' -H 'Host: www.shiftleft.io' -H 'accept-encoding: text/plain, deflate' -H 'cache-control: no-cache' -H 'cookie: Cookie_3=value' -s -b Cookie_3=value)
-            echo $BUILD_RESULT
-            SUCCESS=$(echo $BUILD_RESULT | grep "success")
-            if [ -z "$SUCCESS" ]; then
-                pr-comment 
-                exit 1;
-            fi
-            exit 0
+    build:
+        docker:
+            - image: circleci/openjdk:8-jdk-node
+                working_directory: ~/repo
+                environment:
+                    MAVEN_OPTS: -Xmx3200m
+        steps:
+            - checkout
+            - restore_cache:
+                keys:
+                    - v1-dependencies-{{ checksum "pom.xml" }}
+                    # fallback to using the latest cache if no exact match is found
+                    - v1-dependencies-
             
+            - run: mvn dependency:go-offline
+            - save_cache:
+                paths:
+                    - ~/.m2
+                key: v1-dependencies-{{ checksum "pom.xml" }}
+                
+            # build the apps!!
+            - run:
+                name: Build the application
+                command: mvn clean package
+                
+jobs:
+    ShiftLeft_tests:
+        docker:
+            - image: circleci/openjdk:8-jdk-node
+                working_directory: ~/repo
+        steps:
+            - run:
+                name: Update PATH and Define Environment Variable at Runtime
+                command: |
+                    echo 'export APP_NAME=Docker_Demo_App' >> $BASH_ENV
+                    source $BASH_ENV
+            
+            - run:
+                name: Install Shiftleft agent
+                command: curl https://www.shiftleft.io/download/sl-latest-linux-x64.tar.gz > /tmp/sl.tar.gz && sudo tar -C /usr/local/bin -xzf /tmp/sl.tar.gz
+                
+            - run:
+                name: Analyze for security bugs
+                command: sl analyze --wait --tag branch=$CIRCLE_BRANCH --app $APP_NAME target/hello-shiftleft-0.0.1.jar
+                
+            #	Prioritize security bugs
+            - run:
+                name: Prioritize security bugs
+                command: sh uat.sh
+                
+            #	Test Security Results
+            - run:
+                name: Assert build quality against security standards
+                command: |
+                    BUILD_RESULT=$(curl --fail --show-error -X GET "https://www.shiftleft.io/api/v3/public/org/$SHIFTLEFT_ORG_ID/app/$APP_NAME/tag/branch/$CIRCLE_BRANCH/build" -H 'Accept: */*' -H "Authorization: Bearer $SHIFTLEFT_API_TOKEN" -H 'Cache-Control: no-cache' -H 'Connection: keep-alive' -H 'Host: www.shiftleft.io' -H 'accept-encoding: text/plain, deflate' -H 'cache-control: no-cache' -H 'cookie: Cookie_3=value' -s -b Cookie_3=value)
+                    echo $BUILD_RESULT
+                    SUCCESS=$(echo $BUILD_RESULT | grep "success")
+                    if [ -z "$SUCCESS" ]; then
+                        exit 1;
+                    fi
+                    exit 0
+                    
 workflows:
-  version: 2
-  build_and_test:
-    jobs:
-      - build
-      - ShiftLeft_tests
-      requires:
-        - build
-        
+	version: 2
+	build_and_test:
+		jobs:
+			- build
+			- ShiftLeft_tests
+				requires:
+					- build
