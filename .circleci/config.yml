@@ -62,33 +62,30 @@ jobs:
                     echo 'export APP_NAME=Docker_Demo_App' >> $BASH_ENV
                     source $BASH_ENV
             
-            - run:
-                name: Install Shiftleft agent
-                command: curl https://www.shiftleft.io/download/sl-latest-linux-x64.tar.gz > /tmp/sl.tar.gz && sudo tar -C /usr/local/bin -xzf /tmp/sl.tar.gz
+#            - run:
+#                name: Install Shiftleft agent
+#                command: curl https://www.shiftleft.io/download/sl-latest-linux-x64.tar.gz > /tmp/sl.tar.gz && sudo tar -C /usr/local/bin -xzf /tmp/sl.tar.gz
                 
-            - run:
-                name: Analyze for security bugs
-                command: |
-                    echo "skipping analysis"
-                    echo " test "
-                    # sl analyze --wait --tag branch=$CIRCLE_BRANCH --app $APP_NAME target/hello-shiftleft-0.0.1.jar
+#            - run:
+#                name: Analyze for security bugs
+#                command: sl analyze --wait --tag branch=$CIRCLE_BRANCH --app $APP_NAME target/hello-shiftleft-0.0.1.jar
                 
             #   Prioritize security bugs
-            - run:
-                name: Prioritize security bugs
-                command: sh target/uat.sh
+#            - run:
+#                name: Prioritize security bugs
+#                command: sh target/uat.sh
                 
             #   Test Security Results
-            - run:
-                name: Assert build quality against security standards
-                command: |
-                    BUILD_RESULT=$(curl --fail --show-error -X GET "https://www.shiftleft.io/api/v3/public/org/$SHIFTLEFT_ORG_ID/app/$APP_NAME/tag/branch/$CIRCLE_BRANCH/build" -H 'Accept: */*' -H "Authorization: Bearer $SHIFTLEFT_API_TOKEN" -H 'Cache-Control: no-cache' -H 'Connection: keep-alive' -H 'Host: www.shiftleft.io' -H 'accept-encoding: text/plain, deflate' -H 'cache-control: no-cache' -H 'cookie: Cookie_3=value' -s -b Cookie_3=value)
-                    echo $BUILD_RESULT
-                    SUCCESS=$(echo $BUILD_RESULT | grep "success")
-                    #if [ -z "$SUCCESS" ]; then
-                    #    exit 1;
-                    #fi
-                    #exit 0
+#            - run:
+#                name: Assert build quality against security standards
+#                command: |
+#                    BUILD_RESULT=$(curl --fail --show-error -X GET "https://www.shiftleft.io/api/v3/public/org/$SHIFTLEFT_ORG_ID/app/$APP_NAME/tag/branch/$CIRCLE_BRANCH/build" -H 'Accept: */*' -H "Authorization: Bearer $SHIFTLEFT_API_TOKEN" -H 'Cache-Control: no-cache' -H 'Connection: keep-alive' -H 'Host: www.shiftleft.io' -H 'accept-encoding: text/plain, deflate' -H 'cache-control: no-cache' -H 'cookie: Cookie_3=value' -s -b Cookie_3=value)
+#                    echo $BUILD_RESULT
+#                    SUCCESS=$(echo $BUILD_RESULT | grep "success")
+#                    if [ -z "$SUCCESS" ]; then
+#                        exit 1;
+#                    fi
+#                    exit 0
                     
             - prcomment/pr-comment:
                 comment: "ShiftLeft Tests failed"
