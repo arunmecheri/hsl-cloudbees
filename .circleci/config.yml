@@ -34,7 +34,8 @@ jobs:
                 command: |
                     mvn clean package
                     mkdir -p /tmp/workspace/target
-                    mv target/hello-shiftleft-0.0.1.jar /tmp/workspace/target
+                    mv target/hello-shiftleft-0.0.1.jar /tmp/workspace/target/
+                    
             - persist_to_workspace:
                 root: *workspace_root
                     paths:
