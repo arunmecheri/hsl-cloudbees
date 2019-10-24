@@ -39,10 +39,10 @@ jobs:
 #                    mv target/hello-shiftleft-0.0.1.jar /tmp/workspace/target/
 #                    cp uat.sh /tmp/workspace/target
                     
-            - persist_to_workspace:
-                root: *workspace_root
-                paths:
-                    - target
+#            - persist_to_workspace:
+#                root: *workspace_root
+#                paths:
+#                    - target
 
                 
     ShiftLeft_code_analysis:
