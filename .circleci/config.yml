@@ -87,7 +87,9 @@ jobs:
             - run:
                 name: Adding comment to the PR
                 command: |
-                    echo $CIRCLE_PULL_REQUEST
+                    echo "pr num - $CIRCLE_PR_NUMBER"
+                    echo "pr url - $CIRCLE_PULL_REQUEST"
+                    echo "branch - $CIRCLE_BRANCH"
                     curl --fail --show-error -i -H 'Authorization: token $GH_AUTH_TOKEN' -X POST -d '{"body": "Comment from CircleCI"}' $CIRCLE_PULL_REQUEST/comments
                     
 
