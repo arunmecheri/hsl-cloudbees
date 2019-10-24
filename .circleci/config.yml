@@ -90,7 +90,10 @@ jobs:
                     echo "pr num - $CIRCLE_PR_NUMBER"
                     echo "pr url - $CIRCLE_PULL_REQUEST"
                     echo "branch - $CIRCLE_BRANCH"
-                    curl --fail --show-error -i -H 'Authorization: token $GH_AUTH_TOKEN' -X POST -d '{"body": "Comment from CircleCI"}' $CIRCLE_PULL_REQUEST/comments
+                    echo "pr repo - $CIRCLE_PR_REPONAME"
+                    echo "pr username - $CIRCLE_PR_USERNAME"
+                    $PR_NUMBER = "echo $PULL_URL | cut -d '/' -f7"
+                    curl --fail --show-error -i -H 'Authorization: token $GH_AUTH_TOKEN' -X POST -d '{"body": "Comment from CircleCI"}' https://api.github.com/repos/$CIRCLE_PR_USERNAME/$CIRCLE_PR_REPONAME/issues/$PR_NUMBER/comments
                     
 
                     
