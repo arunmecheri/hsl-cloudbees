@@ -35,7 +35,7 @@ jobs:
                     mvn clean package
                     mkdir -p /tmp/workspace/target
                     mv target/hello-shiftleft-0.0.1.jar /tmp/workspace/target/
-                    cp uat.sh /tmp/workspace
+                    cp uat.sh /tmp/workspace/target
                     
             - persist_to_workspace:
                 root: *workspace_root
@@ -68,7 +68,7 @@ jobs:
             #   Prioritize security bugs
             - run:
                 name: Prioritize security bugs
-                command: sh uat.sh
+                command: sh target/uat.sh
                 
             #   Test Security Results
             - run:
