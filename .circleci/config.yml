@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  pr-comment: benjlevesque/pr-comment@0.1.4
+  prcomment: benjlevesque/pr-comment@0.1.4
 
 references:
   workspace_root: &workspace_root
@@ -90,7 +90,7 @@ jobs:
                     #fi
                     #exit 0
                     
-            - pr-comment:
+            - prcomment/pr-comment:
                 comment: "ShiftLeft Tests failed"
                     
 workflows:
