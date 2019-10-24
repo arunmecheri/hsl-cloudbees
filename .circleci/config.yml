@@ -92,7 +92,10 @@ jobs:
                     PR_REPO=$(echo $CIRCLE_PULL_REQUEST | cut -d '/' -f5)
                     PR_NUMBER=$(echo $CIRCLE_PULL_REQUEST | cut -d '/' -f7)
                     curl -i -H 'Authorization: token a5da3c03be673fcfd87a69dacc6c11c22eb25f71' -X POST -d '{"body": "Comment from CircleCI automation"}' https://api.github.com/repos/arunmecheri/HelloShiftLeft/issues/11/comments
-                    curl --fail --show-error -i -H 'Authorization: token $GH_AUTH_TOKEN' -X POST -d '{"body": "Comment from CircleCI"}' https://api.github.com/repos/$PR_USER/$PR_REPO/issues/$PR_NUMBER/comments                  
+                    curl --fail --show-error -i -H 'Authorization: token $GH_AUTH_TOKEN' -X POST -d '{"body": "Comment from CircleCI"}' https://api.github.com/repos/$PR_USER/$PR_REPO/issues/$PR_NUMBER/comments
+                    BUILD_RESULT=$(curl --fail --show-error -X POST "https://api.github.com/repos/$PR_USER/$PR_REPO/issues/$PR_NUMBER/comments" -H "Authorization: token $GH_AUTH_TOKEN" -d '{"body": "Comment from CircleCI"}')
+                    BUILD_RESULT=$(curl --fail --show-error -X POST "https://api.github.com/repos/arunmecheri/HelloShiftLeft/issues/11/comments" -H "Authorization: token $GH_AUTH_TOKEN" -d '{"body": "Comment from CircleCI"}')
+                 
                     
 workflows:
     version: 2
