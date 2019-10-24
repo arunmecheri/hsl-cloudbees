@@ -87,8 +87,8 @@ jobs:
             - run:
                 name: Adding comment to the PR
                 command: |
-                    echo $CI_PULL_REQUESTS
-                    curl --fail --show-error -i -H 'Authorization: token $GH_AUTH_TOKEN' -X POST -d '{"body": "Comment from CircleCI"}' $CI_PULL_REQUESTS/comments
+                    echo $CIRCLE_PULL_REQUEST
+                    curl --fail --show-error -i -H 'Authorization: token $GH_AUTH_TOKEN' -X POST -d '{"body": "Comment from CircleCI"}' $CIRCLE_PULL_REQUEST/comments
                     
 
                     
@@ -96,7 +96,8 @@ workflows:
     version: 2
     build_and_test:
         jobs:
-            - build
-            - ShiftLeft_code_analysis:
-                requires:
-                    - build
+#            - build
+            - ShiftLeft_code_analysis
+#            - ShiftLeft_code_analysis:
+#                requires:
+#                    - build
