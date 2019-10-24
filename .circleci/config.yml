@@ -1,8 +1,5 @@
 version: 2.1
 
-orbs:
-  prcomment: benjlevesque/pr-comment@0.1.4
-
 references:
   workspace_root: &workspace_root
     /tmp/workspace
@@ -34,13 +31,13 @@ jobs:
                 key: v1-dependencies-{{ checksum "pom.xml" }}
                 
             # build the apps!!
-            - run:
-                name: Build the application
-                command: |
-                    mvn clean package
-                    mkdir -p /tmp/workspace/target
-                    mv target/hello-shiftleft-0.0.1.jar /tmp/workspace/target/
-                    cp uat.sh /tmp/workspace/target
+#            - run:
+#                name: Build the application
+#                command: |
+#                    mvn clean package
+#                    mkdir -p /tmp/workspace/target
+#                    mv target/hello-shiftleft-0.0.1.jar /tmp/workspace/target/
+#                    cp uat.sh /tmp/workspace/target
                     
             - persist_to_workspace:
                 root: *workspace_root
@@ -48,7 +45,7 @@ jobs:
                     - target
 
                 
-    ShiftLeft_tests:
+    ShiftLeft_code_analysis:
         docker:
             - image: circleci/openjdk:8-jdk-node
         working_directory: ~/repo
@@ -63,7 +60,7 @@ jobs:
                     source $BASH_ENV
             
 #            - run:
-#                name: Install Shiftleft agent
+#                name: Install ShiftLeft agent
 #                command: curl https://www.shiftleft.io/download/sl-latest-linux-x64.tar.gz > /tmp/sl.tar.gz && sudo tar -C /usr/local/bin -xzf /tmp/sl.tar.gz
                 
 #            - run:
@@ -86,15 +83,20 @@ jobs:
 #                        exit 1;
 #                    fi
 #                    exit 0
+
+            - run:
+                name: Adding comment to the PR
+                command: |
+                    echo $CI_PULL_REQUESTS
+                    curl --fail --show-error -i -H 'Authorization: token $GH_AUTH_TOKEN' -X POST -d '{"body": "Comment from CircleCI"}' $CI_PULL_REQUESTS/comments
                     
-            - prcomment/pr-comment:
-                comment: "ShiftLeft Tests failed"
+
                     
 workflows:
     version: 2
     build_and_test:
         jobs:
             - build
-            - ShiftLeft_tests:
+            - ShiftLeft_code_analysis:
                 requires:
                     - build
