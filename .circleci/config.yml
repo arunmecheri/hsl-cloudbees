@@ -1,3 +1,10 @@
+references:
+  workspace_root: &workspace_root
+    /tmp/workspace
+  attach_workspace: &attach_workspace
+    attach_workspace:
+      at: *workspace_root
+
 jobs:
     build:
         docker:
@@ -7,6 +14,7 @@ jobs:
             MAVEN_OPTS: -Xmx3200m
             
         steps:
+            - *attach_workspace
             - checkout
             - restore_cache:
                 keys:
@@ -23,7 +31,14 @@ jobs:
             # build the apps!!
             - run:
                 name: Build the application
-                command: mvn clean package
+                command: |
+                    mvn clean package
+                    mkdir -p /tmp/workspace/target
+                    mv target/hello-shiftleft-0.0.1.jar /tmp/workspace/target
+            - persist_to_workspace:
+                root: *workspace_root
+                    paths:
+                        - target
                 
     ShiftLeft_tests:
         docker:
@@ -31,6 +46,7 @@ jobs:
         working_directory: ~/repo
         
         steps:
+            - *attach_workspace
             - run:
                 name: Update PATH and Define Environment Variable at Runtime
                 command: |
