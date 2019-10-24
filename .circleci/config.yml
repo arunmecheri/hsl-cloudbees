@@ -35,6 +35,7 @@ jobs:
                     mvn clean package
                     mkdir -p /tmp/workspace/target
                     mv target/hello-shiftleft-0.0.1.jar /tmp/workspace/target/
+                    cp uat.sh /tmp/workspace
                     
             - persist_to_workspace:
                 root: *workspace_root
@@ -59,10 +60,6 @@ jobs:
             - run:
                 name: Install Shiftleft agent
                 command: curl https://www.shiftleft.io/download/sl-latest-linux-x64.tar.gz > /tmp/sl.tar.gz && sudo tar -C /usr/local/bin -xzf /tmp/sl.tar.gz
-                
-            - run:
-                name: List Dir contents
-                command: ls -al
                 
             - run:
                 name: Analyze for security bugs
