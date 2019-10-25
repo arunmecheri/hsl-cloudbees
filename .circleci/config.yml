@@ -84,10 +84,9 @@ jobs:
                         URL+=$(echo $BUILD_RESULT | jq -r '.errorDetails')
                         PR_COMMENT="ShiftLeft found vulnerabilities that violate policy. Go here for more details - $URL"
                     fi
-                    echo "PR comment - $PR_COMMENT"
-                    echo 'export PR_COMMENT' >> $BASH_ENV
+                    echo "export PR_COMMENT=$PR_COMMENT" >> $BASH_ENV
                     source $BASH_ENV
-                    echo 'export BUILD_RESULT' >> $BASH_ENV
+                    echo "export BUILD_RESULT=$BUILD_RESULT" >> $BASH_ENV
                     source $BASH_ENV
 
             - run:
