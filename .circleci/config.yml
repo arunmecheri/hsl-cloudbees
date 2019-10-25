@@ -91,8 +91,7 @@ jobs:
                     PR_USER=$(echo $CIRCLE_PULL_REQUEST | cut -d '/' -f4)
                     PR_REPO=$(echo $CIRCLE_PULL_REQUEST | cut -d '/' -f5)
                     PR_NUMBER=$(echo $CIRCLE_PULL_REQUEST | cut -d '/' -f7)
-#                    BUILD_RESULT=$(curl --fail --show-error -X POST "https://api.github.com/repos/$PR_USER/$PR_REPO/issues/$PR_NUMBER/comments" -H "Authorization: token $GH_AUTH_TOKEN" -d '{"body": "Comment from CircleCI"}')
-                    BUILD_RESULT=$(curl --fail --show-error -X POST "https://api.github.com/repos/arunmecheri/HelloShiftLeft/issues/11/comments" -H "Authorization: token $GH_AUTH_TOKEN" -d '{"body": "Comment from CircleCI"}')
+                    BUILD_RESULT=$(curl --fail --show-error -X POST "https://api.github.com/repos/arunmecheri/HelloShiftLeft/issues/11/comments" -H 'Authorization: token $GH_AUTH_TOKEN' -d '{"body": "Comment from CircleCI"}')
                  
                     
 workflows:
