@@ -31,18 +31,18 @@ jobs:
                 key: v1-dependencies-{{ checksum "pom.xml" }}
                 
             # build the apps!!
-#            - run:
-#                name: Build the application
-#                command: |
-#                    mvn clean package
-#                    mkdir -p /tmp/workspace/target
-#                    mv target/hello-shiftleft-0.0.1.jar /tmp/workspace/target/
-#                    cp uat.sh /tmp/workspace/target
+            - run:
+                name: Build the application
+                command: |
+                    mvn clean package
+                    mkdir -p /tmp/workspace/target
+                    mv target/hello-shiftleft-0.0.1.jar /tmp/workspace/target/
+                    cp uat.sh /tmp/workspace/target
                     
-#            - persist_to_workspace:
-#                root: *workspace_root
-#                paths:
-#                    - target
+            - persist_to_workspace:
+                root: *workspace_root
+                paths:
+                    - target
 
                 
     ShiftLeft_code_analysis:
@@ -59,18 +59,18 @@ jobs:
                     echo 'export APP_NAME=Docker_Demo_App' >> $BASH_ENV
                     source $BASH_ENV
             
-#            - run:
-#                name: Install ShiftLeft agent
-#                command: curl https://www.shiftleft.io/download/sl-latest-linux-x64.tar.gz > /tmp/sl.tar.gz && sudo tar -C /usr/local/bin -xzf /tmp/sl.tar.gz
+            - run:
+                name: Install ShiftLeft agent
+                command: curl https://www.shiftleft.io/download/sl-latest-linux-x64.tar.gz > /tmp/sl.tar.gz && sudo tar -C /usr/local/bin -xzf /tmp/sl.tar.gz
                 
-#            - run:
-#                name: Analyze for security bugs
-#                command: sl analyze --wait --tag branch=$CIRCLE_BRANCH --app $APP_NAME target/hello-shiftleft-0.0.1.jar
+            - run:
+                name: Analyze for security bugs
+                command: sl analyze --wait --tag branch=$CIRCLE_BRANCH --app $APP_NAME target/hello-shiftleft-0.0.1.jar
                 
             #   Prioritize security bugs
-#            - run:
-#                name: Prioritize security bugs
-#                command: sh target/uat.sh
+            - run:
+                name: Prioritize security bugs
+                command: sh target/uat.sh
                 
             #   Test Security Results
             - run:
@@ -111,8 +111,8 @@ workflows:
     version: 2
     build_and_test:
         jobs:
-#            - build
-            - ShiftLeft_code_analysis
-#            - ShiftLeft_code_analysis:
-#                requires:
-#                    - build
+            - build
+#            - ShiftLeft_code_analysis
+            - ShiftLeft_code_analysis:
+                requires:
+                    - build
