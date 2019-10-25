@@ -73,16 +73,17 @@ jobs:
 #                command: sh target/uat.sh
                 
             #   Test Security Results
-#            - run:
-#                name: Assert build quality against security standards
-#                command: |
-#                    BUILD_RESULT=$(curl --fail --show-error -X GET "https://www.shiftleft.io/api/v3/public/org/$SHIFTLEFT_ORG_ID/app/$APP_NAME/tag/branch/$CIRCLE_BRANCH/build" -H 'Accept: */*' -H "Authorization: Bearer $SHIFTLEFT_API_TOKEN" -H 'Cache-Control: no-cache' -H 'Connection: keep-alive' -H 'Host: www.shiftleft.io' -H 'accept-encoding: text/plain, deflate' -H 'cache-control: no-cache' -H 'cookie: Cookie_3=value' -s -b Cookie_3=value)
-#                    echo $BUILD_RESULT
-#                    SUCCESS=$(echo $BUILD_RESULT | grep "success")
-#                    if [ -z "$SUCCESS" ]; then
-#                        exit 1;
-#                    fi
-#                    exit 0
+            - run:
+                name: Assert build quality against security standards
+                command: |
+                    BUILD_RESULT=$(curl --fail --show-error -X GET "https://www.shiftleft.io/api/v3/public/org/$SHIFTLEFT_ORG_ID/app/$APP_NAME/tag/branch/$CIRCLE_BRANCH/build" -H 'Accept: */*' -H "Authorization: Bearer $SHIFTLEFT_API_TOKEN" -H 'Cache-Control: no-cache' -H 'Connection: keep-alive' -H 'Host: www.shiftleft.io' -H 'accept-encoding: text/plain, deflate' -H 'cache-control: no-cache' -H 'cookie: Cookie_3=value' -s -b Cookie_3=value)
+                    echo $BUILD_RESULT
+                    SUCCESS=$(echo $BUILD_RESULT | grep "success")
+                    if [ -z "$SUCCESS" ]; then
+                        PR_COMMENT=$BUILD_RESULT
+                    else
+                        PR_COMMENT="ShiftLeft did not detect any vulnerabilities that violate policy. This PR can be merged."
+                    fi
 
             - run:
                 name: Adding comment to the PR
@@ -91,7 +92,11 @@ jobs:
                         PR_USER=$(echo $CIRCLE_PULL_REQUEST | cut -d '/' -f4)
                         PR_REPO=$(echo $CIRCLE_PULL_REQUEST | cut -d '/' -f5)
                         PR_NUMBER=$(echo $CIRCLE_PULL_REQUEST | cut -d '/' -f7)
-                        BUILD_RESULT=$(curl --fail --show-error -X POST https://api.github.com/repos/$PR_USER/$PR_REPO/issues/$PR_NUMBER/comments -H "Authorization: token $GH_AUTH_TOKEN" -d "{\"body\": \"Comment from CircleCI\"}")
+                        BUILD_RESULT=$(curl --fail --show-error -X POST https://api.github.com/repos/$PR_USER/$PR_REPO/issues/$PR_NUMBER/comments -H "Authorization: token $GH_AUTH_TOKEN" -d "{\"body\": \"$PR_COMMENT\"}")
+
+                        if [ -z "$SUCCESS" ]; then
+                            exit 1
+                        fi
                     else
                         echo "No PR information. Was this a commit directly to the master branch?"
                     fi
