@@ -72,7 +72,7 @@ jobs:
                 name: Prioritize security bugs
                 command: sh target/uat.sh
                 
-            #   Test Security Results
+            #   Test Security Results 
             - run:
                 name: Assert build quality against security standards
                 command: |
