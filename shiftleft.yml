@@ -1,0 +1,8 @@
+build_rules:
+  - id: rule-injection
+    severity:
+      - SEVERITY_MEDIUM_IMPACT
+      - SEVERITY_HIGH_IMPACT
+    type:
+      - SQL Injection
+    threshold: 10
