@@ -5,4 +5,4 @@ build_rules:
       - SEVERITY_HIGH_IMPACT
     type:
       - Sensitive Data Leak
-    threshold: 77
+    threshold: 33
